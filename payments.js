@@ -17,11 +17,16 @@ const razorpay = new Razorpay({
 app.post('/create-order', async (req, res) => {
   const { amount } = req.body;
   try {
+    const callbackUrl = 'https://botcode-back.onrender.com/payment-callback';
     const order = await razorpay.orders.create({
       amount: amount * 100, // Amount in paisa
       currency: 'INR',
       receipt: `receipt_${Date.now()}`,
-    });
+      payment_capture: 1, 
+      notes: {
+        "callback_url": callbackUrl
+    }
+  });
     res.status(200).json(order);
   } catch (error) {
     console.error(error);
@@ -44,6 +49,23 @@ app.post('/verify-payment', (req, res) => {
     res.status(400).json({ status: 'failed' });
   }
 });
+
+app.post('/payment-callback', (req, res) => {
+  const paymentDetails = req.body; // Razorpay will send the payment details in the request body
+  
+  // Verify payment status (usually by checking signature and payment ID)
+  // Handle payment success or failure
+
+  // Example of handling successful payment:
+  if (paymentDetails.status === 'captured') {
+    console.log('Payment Successful:', paymentDetails);
+    res.status(200).send('Payment Successful');
+  } else {
+    console.log('Payment Failed:', paymentDetails);
+    res.status(400).send('Payment Failed');
+  }
+});
+
 
 // Start server
 app.listen(5000, () => {
