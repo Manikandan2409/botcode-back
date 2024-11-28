@@ -45,7 +45,7 @@ app.post('/create-payment-link', async (req, res) => {
       currency: currency,
       description: description,
       name: name,  
-      email: email0,  // Optional: customer email for receipts
+      email: email,  // Optional: customer email for receipts
       contact: contact,  // Optional: customer phone number
       callback_url: 'https://botcode-back.onrender.com/payment-callback', // Optional: callback URL to handle response
       expire_by: Math.floor(Date.now() / 1000) + 60 * 30,  // Payment link expiration (30 minutes from now)
@@ -56,7 +56,11 @@ app.post('/create-payment-link', async (req, res) => {
     res.json({ paymentLink: paymentLink.short_url, sessionId: paymentLink.id });
   } catch (error) {
     console.error('Error creating payment link:', error);
-    res.status(500).json({ error: 'Failed to create payment link' ,error});
+    res.status(500).json({
+      error: 'Failed to create payment link',
+      message: error.message,  // Include the specific error message for debugging
+      error_details: error  // Include more detailed error details
+    });
   }
 });
 
