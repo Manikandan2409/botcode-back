@@ -34,6 +34,34 @@ app.post('/create-order', async (req, res) => {
   }
 });
 
+app.post('/create-payment-link', async (req, res) => {
+  const { amount, currency, description } = req.body;
+
+  try {
+    // Create a payment link
+    const paymentLink = await razorpay.paymentLinks.create({
+      amount: amount * 100,  // Amount in paisa (1 INR = 100 paise)
+      currency: currency,
+      description: description,
+      name: 'Your Company Name',  // You can specify the company name
+      email: 'customer@example.com',  // Optional: customer email for receipts
+      contact: '+919999999999',  // Optional: customer phone number
+      callback_url: 'https://your-website.com/payment-callback', // Optional: callback URL to handle response
+      expire_by: Math.floor(Date.now() / 1000) + 60 * 30,  // Payment link expiration (30 minutes from now)
+      remind: true,  // Optional: whether to remind the user before expiration
+    });
+
+    // Respond with the payment link URL
+    res.json({ paymentLink: paymentLink.short_url, sessionId: paymentLink.id });
+  } catch (error) {
+    console.error('Error creating payment link:', error);
+    res.status(500).json({ error: 'Failed to create payment link' });
+  }
+});
+
+
+
+
 // Verify payment
 app.post('/verify-payment', (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
@@ -65,6 +93,10 @@ app.post('/payment-callback', (req, res) => {
     res.status(400).send('Payment Failed');
   }
 });
+
+
+
+
 
 
 // Start server
