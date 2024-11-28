@@ -56,7 +56,7 @@ app.post('/create-payment-link', async (req, res) => {
     res.json({ paymentLink: paymentLink.short_url, sessionId: paymentLink.id });
   } catch (error) {
     console.error('Error creating payment link:', error);
-    res.status(500).json({ error: 'Failed to create payment link' });
+    res.status(500).json({ error: 'Failed to create payment link' ,error});
   }
 });
 
