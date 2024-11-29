@@ -35,23 +35,6 @@ app.post('/create-order', async (req, res) => {
   }
 });
 
-app.post('/create-payment-link', async (req, res) => {
-  const { amount, currency, description,name,contact,email } = req.body;
-
-  try {
-    // Create a payment link
-    const paymentLink = await razorpay.paymentLinks.create({
-      amount: amount * 100,  
-      currency: currency,
-      description: description,
-      name: name,  
-      email: email,  // Optional: customer email for receipts
-      contact: contact,  // Optional: customer phone number
-      callback_url: 'https://botcode-back.onrender.com/payment-callback', // Optional: callback URL to handle response
-      expire_by: Math.floor(Date.now() / 1000) + 60 * 30,  // Payment link expiration (30 minutes from now)
-      remind: true,  // Optional: whether to remind the user before expiration
-    });
-
     app.post('/create-payment-link', async (req, res) => {
       const { amount, currency, description, name, contact, email } = req.body;
     
