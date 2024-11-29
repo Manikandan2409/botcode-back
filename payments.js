@@ -52,6 +52,56 @@ app.post('/create-payment-link', async (req, res) => {
       remind: true,  // Optional: whether to remind the user before expiration
     });
 
+    app.post('/create-payment-link', async (req, res) => {
+      const { amount, currency, description, name, contact, email } = req.body;
+    
+      // Prepare the payment link payload
+      const payload = {
+        amount: amount * 100, // Razorpay requires amount in paise
+        currency: currency || 'INR',
+        description: description || 'Payment for services',
+        customer: {
+          name: name || 'John Doe',
+          contact: contact || '+919876543210',
+          email: email || 'example@example.com',
+        },
+        notify: {
+          sms: true,
+          email: true,
+        },
+        callback_url: 'https://botcode-back.onrender.com/payment-callback',
+        callback_method: 'get',
+      };
+    
+      try {
+        // Make the API request
+        const response = await axios.post(
+          'https://api.razorpay.com/v1/payment_links',
+          payload,
+          {
+            auth: {
+              username: 'rzp_test_Dj4J237kLFsMzZ',
+              password: '2HIoddEgtdXxh9bmoVB2MHXG',
+            },
+          }
+        );
+    
+        // Send the response back to the client
+        res.status(200).json({
+          message: 'Payment link created successfully',
+          paymentLink: response.data.short_url,
+          id: response.data.id,
+        });
+      } catch (error) {
+        console.error('Error creating payment link:', error.response?.data || error.message);
+        res.status(500).json({
+          error: 'Failed to create payment link',
+          details: error.response?.data || error.message,
+        });
+      }
+    });
+
+
     // Respond with the payment link URL
     res.json({ paymentLink: paymentLink.short_url, sessionId: paymentLink.id });
   } catch (error) {
