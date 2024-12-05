@@ -81,6 +81,12 @@ app.post('/create-payment-link', async (req, res) => {
   }
 });
 
+
+const test = async () => {
+  return  "hello world";
+  
+}
+
 // Verify payment
 app.post('/verify-payment', (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
@@ -114,6 +120,7 @@ app.post('/payment-callback', (req, res) => {
     res.status(400).send('Payment Failed');
   }
 });
+
 
 // Start server
 app.listen(5000, () => {
