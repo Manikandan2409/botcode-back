@@ -82,8 +82,8 @@ app.post('/create-payment-link', async (req, res) => {
 });
 
 
-app.get('/test', async () => {
-  return  "hello world";
+app.get('/test', async (req,res) => {
+  return  res.send("hello from test");
   
 });
 
