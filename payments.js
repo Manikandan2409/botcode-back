@@ -85,7 +85,7 @@ app.post('/create-payment-link', async (req, res) => {
 app.get('/test', async () => {
   return  "hello world";
   
-}
+});
 
 // Verify payment
 app.post('/verify-payment', (req, res) => {
