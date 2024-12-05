@@ -82,7 +82,7 @@ app.post('/create-payment-link', async (req, res) => {
 });
 
 
-const test = async () => {
+app.get('/test', async () => {
   return  "hello world";
   
 }
