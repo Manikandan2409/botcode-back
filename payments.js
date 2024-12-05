@@ -35,7 +35,7 @@ passport.deserializeUser((user, done) => done(null, user));
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: 'https://botcode-back.onrender.com/auth/google/callback',
+  callbackURL: 'https://botcode-back.onrender.com/auth/google/callback/',
 },
 (accessToken, refreshToken, profile, done) => {
   // User information from Google profile
@@ -49,7 +49,7 @@ app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-app.get('/auth/google/callback',
+app.get('/auth/google/callback/',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     res.redirect('/profile');
@@ -108,7 +108,7 @@ app.post('/create-payment-link', async (req, res) => {
       sms: true,
       email: true,
     },
-    callback_url: 'https://botcode-back.onrender.com/payment-callback',
+    callback_url: 'https://botcode-back.onrender.com/payment-callback/',
     callback_method: 'get',
   };
 
